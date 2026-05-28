@@ -54,7 +54,7 @@ It retrieves the most relevant entries for future executions and compresses long
 
 ## ScreenShots
 1. Create a manual task.
-  ![App Screenshot](./screenshots/Screenshot 2026-05-29 at 00.00.17.png)
+  ![App Screenshot](./screenshots/sc1.png)
 2. List tasks.
 
 3. Send a conversational task message.
