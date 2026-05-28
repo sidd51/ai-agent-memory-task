@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Agent Memory Task</title>
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --panel: rgba(255, 252, 247, 0.88);
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #c2410c;
+      --accent-soft: #fed7aa;
+      --line: rgba(31, 41, 55, 0.12);
+      --shadow: 0 20px 60px rgba(120, 53, 15, 0.12);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(194, 65, 12, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(14, 116, 144, 0.12), transparent 30%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+    .hero {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      max-width: 800px;
+    }
+    .subhead {
+      max-width: 700px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+    .card {
+      grid-column: span 6;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .card.full {
+      grid-column: 1 / -1;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.6rem;
+    }
+    p {
+      margin-top: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    label {
+      display: block;
+      font-size: 0.92rem;
+      margin: 14px 0 8px;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font: inherit;
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--ink);
+    }
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 16px;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+    .log, .chat-stream {
+      display: grid;
+      gap: 12px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      font-size: 0.88rem;
+      color: #7c2d12;
+      width: fit-content;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .chat-bubble {
+      border-radius: 18px;
+      padding: 12px 14px;
+      line-height: 1.5;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .chat-bubble.user {
+      background: rgba(194, 65, 12, 0.1);
+    }
+    .mini {
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+    @media (max-width: 900px) {
+      .card {
+        grid-column: 1 / -1;
+      }
+      h1 {
+        line-height: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">AI Agent Execution Platform</div>
+      <h1>Persistent memory, multi-step reasoning, and resilient task runs.</h1>
+      <p class="subhead">Create manual tasks, send conversational requests, and inspect how the planner, executor, verifier, retries, summaries, and memory history evolve over time.</p>
+    </section>
+    <section class="grid">
+      <article class="card">
+        <div class="pill">Manual Task Creation</div>
+        <h2>Queue a task</h2>
+        <p>Use this entry point for direct operational requests. The background worker will pick it up automatically.</p>
+        <form id="task-form">
+          <label for="task-title">Title</label>
+          <input id="task-title" name="title" placeholder="Draft a project status summary" required />
+          <label for="task-description">Description</label>
+          <textarea id="task-description" name="description" placeholder="Summarize key milestones, risks, next steps, and note anything that should be retried if execution fails." required></textarea>
+          <button type="submit">Create task</button>
+        </form>
+      </article>
+      <article class="card">
+        <div class="pill">Conversational Input</div>
+        <h2>Talk to the agent</h2>
+        <p>Messages are parsed into tasks when they look actionable. The assistant response and task creation both persist.</p>
+        <div class="row">
+          <button id="new-conversation" type="button">Start conversation</button>
+          <span class="mini" id="conversation-status">No conversation yet</span>
+        </div>
+        <div class="chat-stream" id="chat-stream"></div>
+        <form id="chat-form">
+          <label for="chat-input">Message</label>
+          <textarea id="chat-input" placeholder="Please prepare a retry-aware execution plan for our launch checklist and keep memory of prior failures." required></textarea>
+          <button type="submit">Send message</button>
+        </form>
+      </article>
+      <article class="card full">
+        <div class="pill">Execution History</div>
+        <h2>Latest tasks</h2>
+        <p>The log below reflects queued, running, retried, completed, failed, and deduplicated runs.</p>
+        <div class="log" id="task-log"></div>
+      </article>
+    </section>
+  </main>
+  <script>
+    const taskForm = document.getElementById("task-form");
+    const taskLog = document.getElementById("task-log");
+    const newConversationButton = document.getElementById("new-conversation");
+    const conversationStatus = document.getElementById("conversation-status");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const chatStream = document.getElementById("chat-stream");
+    let conversationId = null;
+
+    async function request(path, options = {}) {
+      const response = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...options
+      });
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || "Request failed");
+      }
+      return response.json();
+    }
+
+    async function refreshTasks() {
+      const tasks = await request("/tasks");
+      taskLog.innerHTML = tasks.map(task => `
+        <div class="item">
+          <strong>${task.title}</strong>
+          <div class="mini">Status: ${task.status} | Retries: ${task.retry_count}/${task.max_retries}</div>
+          <div>${task.description}</div>
+          <div class="mini">${task.latest_summary || task.failure_reason || "Awaiting execution summary"}</div>
+        </div>
+      `).join("");
+    }
+
+    async function createConversation() {
+      const conversation = await request("/conversations", {
+        method: "POST",
+        body: JSON.stringify({ title: "Browser Conversation" })
+      });
+      conversationId = conversation.id;
+      conversationStatus.textContent = `Conversation ${conversation.id}`;
+      chatStream.innerHTML = "";
+    }
+
+    function renderConversation(conversation) {
+      chatStream.innerHTML = conversation.messages.map(message => `
+        <div class="chat-bubble ${message.role}">
+          <strong>${message.role}</strong>
+          <div>${message.content}</div>
+        </div>
+      `).join("");
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    taskForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const payload = {
+        title: document.getElementById("task-title").value,
+        description: document.getElementById("task-description").value,
+        max_retries: 2
+      };
+      await request("/tasks", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      taskForm.reset();
+      await refreshTasks();
+    });
+
+    newConversationButton.addEventListener("click", async () => {
+      await createConversation();
+    });
+
+    chatForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!conversationId) {
+        await createConversation();
+      }
+      const result = await request(`/conversations/${conversationId}/messages`, {
+        method: "POST",
+        body: JSON.stringify({ content: chatInput.value })
+      });
+      chatInput.value = "";
+      renderConversation(result.conversation);
+      await refreshTasks();
+    });
+
+    refreshTasks();
+    setInterval(refreshTasks, 2500);
+  </script>
+</body>
+</html>
