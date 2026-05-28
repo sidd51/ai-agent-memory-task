@@ -52,6 +52,15 @@ The system stores:
 
 It retrieves the most relevant entries for future executions and compresses long histories when needed.
 
+## ScreenShots
+1. Create a manual task.
+  ![App Screenshot](./screenshots/sc1.png)
+2. List tasks.
+
+3. Send a conversational task message.
+   
+4. List Conversations
+
 ## API Endpoints
 
 ### Health
