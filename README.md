@@ -56,10 +56,12 @@ It retrieves the most relevant entries for future executions and compresses long
 1. Create a manual task.
   ![App Screenshot](./screenshots/sc1.png)
 2. List tasks.
-
+  ![App Screenshot](./screenshots/sc2.png)
 3. Send a conversational task message.
+  ![App Screenshot](./screenshots/sc3.png)
    
-4. List Conversations
+5. List Conversations
+  ![App Screenshot](./screenshots/sc4.png)
 
 ## API Endpoints
 
